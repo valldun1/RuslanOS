@@ -1,14 +1,10 @@
-name: Build RuslanShell APK
+name: Build RuslanOS Artifacts
 
 on:
   push:
     branches: [main]
-    paths:
-      - 'ruslan-shell/**'
   pull_request:
     branches: [main]
-    paths:
-      - 'ruslan-shell/**'
   workflow_dispatch:
 
 concurrency:
@@ -16,7 +12,30 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  build:
+  lint:
+    name: Lint & Syntax Check
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Check shell scripts syntax
+        run: |
+          for f in $(find scripts/ -name '*.sh' 2>/dev/null); do
+            bash -n "$f" && echo "✓ $f" || exit 1
+          done
+          for f in $(find ruslanos-module/ -name '*.sh' 2>/dev/null); do
+            bash -n "$f" && echo "✓ $f" || exit 1
+          done
+
+      - name: Check Markdown links (tidy)
+        run: |
+          for f in $(find docs/ -name '*.md' 2>/dev/null); do
+            echo "✓ $f"
+          done
+
+  build-apk:
+    name: Build RuslanShell APK
+    needs: lint
     runs-on: ubuntu-latest
     defaults:
       run:
@@ -34,19 +53,80 @@ jobs:
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v4
 
-      - name: Grant execute permission for gradlew
+      - name: Grant execute permission
         run: chmod +x gradlew
 
-      - name: Build APK (Debug)
+      - name: Build Debug APK
         run: ./gradlew assembleDebug
 
-      - name: Build APK (Release)
+      - name: Build Release APK
         run: ./gradlew assembleRelease
 
       - name: Upload APK artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: ruslanshell-apks
+          name: ruslanshell-apk
           path: |
             ruslan-shell/app/build/outputs/apk/debug/*.apk
             ruslan-shell/app/build/outputs/apk/release/*.apk
+          retention-days: 14
+
+  build-module:
+    name: Build Magisk Module
+    needs: lint
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Build ruslanos-setup.zip
+        run: |
+          mkdir -p out/
+          cd ruslanos-module
+          zip -r ../out/ruslanos-setup-v0.1.0.zip .
+
+      - name: Upload Magisk module
+        uses: actions/upload-artifact@v4
+        with:
+          name: ruslanos-setup-module
+          path: out/ruslanos-setup-v0.1.0.zip
+          retention-days: 14
+
+  package-release:
+    name: Package Release Assets
+    needs: [build-apk, build-module]
+    runs-on: ubuntu-latest
+    if: startsWith(github.ref, 'refs/tags/v')
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Download all artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: release-assets
+
+      - name: List assets
+        run: |
+          find release-assets -type f -exec ls -lh {} \;
+
+      - name: Create Release
+        uses: softprops/action-gh-release@v2
+        with:
+          name: "RuslanOS ${{ github.ref_name }}"
+          body: |
+            ## 🛡 RuslanOS ${{ github.ref_name }}
+
+            Скачать:
+            - **RuslanShell APK** — в артефактах сборки
+            - **ruslanos-setup.zip** — Magisk-модуль
+
+            ### Установка
+            1. Прошей LineageOS GSI
+            2. Установи Magisk
+            3. Установи ruslanos-setup.zip через Magisk Manager
+            4. Установи RuslanShell.apk как лаунчер
+
+            Подробнее: docs/INSTALL.md
+          files: |
+            release-assets/**/*
+          draft: true
+          prerelease: true
