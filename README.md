@@ -51,10 +51,12 @@
 
 - [x] GitHub-репозиторий создан
 - [x] Архитектура спроектирована
-- [ ] Определена модель устройства (Xiaomi `tanzanite`?)
+- [x] Magisk модуль `ruslanos-setup` готов (v0.1.0)
+- [x] Лаунчер RuslanShell написан (Kotlin + Compose)
+- [x] CI/CD настроен (GitHub Actions)
+- [ ] Определена модель устройства (Xiaomi на HyperOS 2.0)
 - [ ] LineageOS GSI прошит на устройство
-- [ ] Magisk модуль `ruslanos-setup` готов
-- [ ] Лаунчер RuslanShell собран
+- [ ] Ruslan Agent APK добавлен в модуль
 - [ ] Первый рабочий прототип
 
 ---
