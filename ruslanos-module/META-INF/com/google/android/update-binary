@@ -1,0 +1,34 @@
+#MAGISK
+
+##########################################################################################
+# Инсталлятор Magisk-модуля
+##########################################################################################
+
+ui_print "  ***************************************"
+ui_print "  *     RuslanOS Setup v0.1.0           *"
+ui_print "  *     Установка системного агента     *"
+ui_print "  ***************************************"
+ui_print " "
+
+# Проверка архитектуры
+ARCH=$(uname -m)
+ui_print "  Архитектура: $ARCH"
+
+# Проверка Android версии
+API=$(getprop ro.build.version.sdk)
+ui_print "  Android API: $API"
+
+if [ "$API" -lt 30 ]; then
+  abort "  ❌ Требуется Android 11+ (API >= 30)"
+fi
+
+ui_print "  ✅ Установка..."
+
+# Копируем системные файлы
+unzip -o "$ZIPFILE" 'system/*' -d $MODPATH >/dev/null
+
+# Права
+set_perm_recursive $MODPATH/system/priv-app 0 0 755 644
+
+ui_print "  ✅ RuslanOS установлен!"
+ui_print "  Перезагрузи устройство."

@@ -1,0 +1,29 @@
+# Сборка и прошивка
+
+# Игнорируем системные файлы
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+
+# Сборка
+build/
+out/
+dist/
+*.img
+*.zip
+*.tar.gz
+
+# IDE
+.idea/
+.vscode/
+*.iml
+
+# Gradle
+.gradle/
+build/
+local.properties
+
+# Android Studio
+app/build/
+*.apk

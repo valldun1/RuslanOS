@@ -1,0 +1,15 @@
+#!/system/bin/sh
+
+# RuslanOS Boot Service
+# Автозапуск Ruslan Agent при загрузке системы
+
+# Ждём завершения загрузки
+while [ "$(getprop sys.boot_completed)" != "1" ]; do
+  sleep 2
+done
+
+# Запускаем Ruslan Agent
+if [ -f /system/priv-app/RuslanAgent/RuslanAgent.apk ]; then
+  am start -n com.ruslan.agent/.MainActivity
+  log -t "RuslanOS" "Ruslan Agent started on boot"
+fi

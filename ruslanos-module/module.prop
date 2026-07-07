@@ -1,0 +1,6 @@
+id=ruslanos-setup
+name=RuslanOS Setup
+version=v0.1.0
+versionCode=1
+author=Ruslan Team
+description=Magisk-модуль для RuslanOS: устанавливает Ruslan Agent в /system/priv-app, настраивает систему, блокирует стоковые приложения
