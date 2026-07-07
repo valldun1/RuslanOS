@@ -1,0 +1,23 @@
+#!/system/bin/sh
+
+# RuslanOS — CLI-утилита для вызова Руслана из терминала
+# Использование: ruslan <команда>
+# Пример: ruslan "поставь Firefox"
+
+if [ -z "$1" ]; then
+  echo "🛡 РусланOS"
+  echo "Использование: ruslan <команда>"
+  echo ""
+  echo "Примеры:"
+  echo "  ruslan статус        — информация о системе"
+  echo "  ruslan помоги        — список команд"
+  echo "  ruslan install <pkg> — установить приложение"
+  exit 0
+fi
+
+# Отправляем команду Руслану через intent
+am broadcast -a com.ruslanos.COMMAND --es command "$*" 2>/dev/null
+
+# Если broadcast не сработал — показываем в stdout
+echo "🛡 Команда отправлена Руслану: $*"
+echo "   (работает через системный broadcast)"

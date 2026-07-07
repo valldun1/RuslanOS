@@ -1,12 +1,13 @@
 #MAGISK
 
 ##########################################################################################
-# Инсталлятор Magisk-модуля
+# *     RuslanOS Setup v0.1.0                                                           *
+# *     Установка системного агента                                                      *
 ##########################################################################################
 
 ui_print "  ***************************************"
 ui_print "  *     RuslanOS Setup v0.1.0           *"
-ui_print "  *     Установка системного агента     *"
+ui_print "  *     AI-операционная система         *"
 ui_print "  ***************************************"
 ui_print " "
 
@@ -22,13 +23,25 @@ if [ "$API" -lt 30 ]; then
   abort "  ❌ Требуется Android 11+ (API >= 30)"
 fi
 
-ui_print "  ✅ Установка..."
+ui_print "  ✅ Установка системных файлов..."
 
-# Копируем системные файлы
+# Распаковываем все файлы модуля
 unzip -o "$ZIPFILE" 'system/*' -d $MODPATH >/dev/null
 
-# Права
+# Устанавливаем права
 set_perm_recursive $MODPATH/system/priv-app 0 0 755 644
+set_perm_recursive $MODPATH/system/bin 0 0 755 755
+set_perm_recursive $MODPATH/system/etc/init 0 0 755 644
 
-ui_print "  ✅ RuslanOS установлен!"
-ui_print "  Перезагрузи устройство."
+# Создаём .replace для блокировки стоковых приложений
+ui_print "  ✅ Блокировка стоковых приложений..."
+for app in "Mms" "Email" "Calendar" "Calculator" "DeskClock" "SoundRecorder" "Music" "Video" "Stk" "Browser" "QuickSearchBox" "Maps" "Mail"; do
+  mkdir -p "$MODPATH/system/priv-app/$app"
+  touch "$MODPATH/system/priv-app/$app/.replace"
+done
+
+ui_print " "
+ui_print "  ***************************************"
+ui_print "  *  🛡 RuslanOS установлен!            *"
+ui_print "  *  Перезагрузи устройство.            *"
+ui_print "  ***************************************"
