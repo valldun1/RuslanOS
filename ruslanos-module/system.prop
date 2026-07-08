@@ -1,0 +1,21 @@
+# System properties for RuslanOS
+# Applied by Magisk on boot
+
+# Default launcher
+persist.sys.launcher.package=com.ruslanos.shell
+
+# Performance
+persist.sys.shutdown.timeout=30
+ro.sys.fw.bg_apps_limit=16
+
+# Power save
+persist.sys.powerhal.interactive=false
+
+# Disable unnecessary debugging
+persist.sys.usb.config=mtp,adb
+
+# Screen timeout (5 minutes for kiosk mode)
+persist.sys.screen_off_timeout=300000
+
+# Keep Ruslan Agent alive
+persist.sys.alarm.master.volume=1
