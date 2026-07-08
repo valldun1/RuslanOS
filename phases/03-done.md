@@ -49,8 +49,16 @@
 - [x] AGENTS.md (инструкции для AI-агентов)
 - [x] README.md обновлён
 
-## Создано файлов: 40+
-## Commits: 5 (все запушены в main)
+### Фаза 2g: Cron-тик 1 — служебные файлы
+- [x] system.prop (твики: лаунчер, таймаут, производительность)
+- [x] .gitattributes (normalize line endings)
+- [x] .github/ISSUE_TEMPLATE/bug_report.md
+- [x] .github/ISSUE_TEMPLATE/feature_request.md
+- [x] SECURITY.md (политика безопасности)
+- [x] scripts/ci-build.sh (локальный pre-push CI check)
+
+## Создано файлов: 45+
+## Commits: 6 (все запушены в main)
 ## Статус CI: активен (ждёт первого пуша для сборки)
 
 ## Осталось
